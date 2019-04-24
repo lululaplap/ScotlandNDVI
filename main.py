@@ -21,15 +21,15 @@ def maskCloud(image):
     mask = QA.bitwiseAnd(cloudBitMask).eq(0).And(QA.bitwiseAnd(cirrusBitMask).eq(0))
     return image.updateMask(mask).divide(10000)
 
-
-ee.mapclient.centerMap(-3.195725712890635,55.95662062603667,9)#centre on Edinburgh
-
 #returns the NDVI of the image using B8 (NIR) and B2 (red)
 def ndvi(image):
     return image.normalizedDifference(['B8', 'B2']);
 
 #vis params
 ndviParams = {'min': -0.5, 'max': 1, 'palette': ['306466','9cab68','cccc66','9c8448','6e462c']}
+
+#centre on Edinburgh
+ee.mapclient.centerMap(-3.195725712890635,55.95662062603667,9)
 
 #add to map, applying mask, ndvi and a mean reducer
 ee.mapclient.addToMap(corp.map(maskCloud).map(ndvi).reduce(ee.Reducer.median()), ndviParams)
